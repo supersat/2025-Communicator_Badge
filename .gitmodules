@@ -1,0 +1,3 @@
+[submodule "firmware/linux/buildroot"]
+	path = firmware/linux/buildroot
+	url = git@github.com:supersat/buildroot.git
