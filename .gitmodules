@@ -2,8 +2,14 @@
 	path = firmware/linux/buildroot
 	url = git@github.com:supersat/buildroot.git
 [submodule "firmware/linux/crosstool-NG"]
-	path = firmware/linux/crosstool-NG
+	path = firmware/linux/toolchain/crosstool-NG
 	url = https://github.com/jcmvbkbc/crosstool-NG.git
 [submodule "firmware/linux/esp-idf"]
 	path = firmware/linux/esp-idf
 	url = https://github.com/jcmvbkbc/esp-idf
+[submodule "firmware/linux/toolchain/xtensa-dynconfig"]
+	path = firmware/linux/toolchain/xtensa-dynconfig
+	url = https://github.com/jcmvbkbc/xtensa-dynconfig
+[submodule "firmware/linux/toolchain/config-esp32s3"]
+	path = firmware/linux/toolchain/esp32s3
+	url = https://github.com/jcmvbkbc/config-esp32s3
