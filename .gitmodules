@@ -4,3 +4,6 @@
 [submodule "firmware/linux/crosstool-NG"]
 	path = firmware/linux/crosstool-NG
 	url = https://github.com/jcmvbkbc/crosstool-NG.git
+[submodule "firmware/linux/esp-idf"]
+	path = firmware/linux/esp-idf
+	url = https://github.com/jcmvbkbc/esp-idf
