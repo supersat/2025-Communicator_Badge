@@ -1,3 +1,6 @@
 [submodule "firmware/linux/buildroot"]
 	path = firmware/linux/buildroot
 	url = git@github.com:supersat/buildroot.git
+[submodule "firmware/linux/crosstool-NG"]
+	path = firmware/linux/crosstool-NG
+	url = https://github.com/jcmvbkbc/crosstool-NG.git
