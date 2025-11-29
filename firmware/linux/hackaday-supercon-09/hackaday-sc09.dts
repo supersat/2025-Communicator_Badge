@@ -1,0 +1,175 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/dts-v1/;
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include "gpio-esp32.h"
+#include "esp32s3.dtsi"
+
+/ {
+	memory@0 {
+		device_type = "memory";
+		reg = <0x3d800000 0x00800000>;
+	};
+
+	i2c0 {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		compatible = "i2c-gpio";
+
+		sda-gpios = <&gpio0 4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+		scl-gpios = <&gpio0 5 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+
+		pinctrl-0 = <&i2c0_pins>;
+		pinctrl-names = "default";
+	};
+
+	i2c1 {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		compatible = "i2c-gpio";
+
+		sda-gpios = <&gpio0 47 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+		scl-gpios = <&gpio0 14 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+
+		pinctrl-0 = <&i2c1_pins>;
+		pinctrl-names = "default";
+	};
+};
+
+&gpio_in_mux {
+	status = "ok";
+	usb_device_in: usb_device_in {
+		pinctrl-single,pins = <
+			GPIO_FUNC_IN_SEL(58) 0x38		/* usb_otg_iddig_in: fixed '1' */
+			GPIO_FUNC_IN_SEL(59) 0x3c		/* usb_srp_avalid_in: fixed '0' */
+			GPIO_FUNC_IN_SEL(60) 0x38		/* usb_srp_bvalid_in: fixed '1' */
+			GPIO_FUNC_IN_SEL(61) 0x38>;		/* usb_otg_vbusvalid_in: fixed '1' */
+	};
+
+	usb_host_in: usb_host_in {
+		pinctrl-single,pins = <
+			GPIO_FUNC_IN_SEL(58) 0x3c		/* usb_otg_iddig_in: fixed '0' */
+			GPIO_FUNC_IN_SEL(59) 0x38		/* usb_srp_avalid_in: fixed '1' */
+			GPIO_FUNC_IN_SEL(60) 0x3c		/* usb_srp_bvalid_in: fixed '0' */
+			GPIO_FUNC_IN_SEL(61) 0x38>;		/* usb_otg_vbusvalid_in: fixed '1' */
+	};
+};
+
+&rtc_iomux {
+	status = "ok";
+	usb_rtc_pins: usb_rtc_pins {
+		pinctrl-single,pins = <
+			PIN(19) RTC_MUX_SEL			/* USB_D- */
+			PIN(20) RTC_MUX_SEL>;		/* USB_D+ */
+	};
+};
+
+&iomux {
+	status = "ok";
+
+	/* SAO port */
+	i2c0_pins: i2c0_pins {
+		pinctrl-single,pins = <
+			PIN(4) FUN0_20MA_IE_WPU			/* SDA */
+			PIN(5) FUN0_20MA_IE_WPU>;		/* SCL */
+	};
+	/* Keyboard */
+	i2c1_pins: i2c1_pins {
+		pinctrl-single,pins = <
+			PIN(47) FUN0_20MA_IE_WPU		/* SDA */
+			PIN(14) FUN0_20MA_IE_WPU>;		/* SCL */
+	};
+	/* NV3007 LCD controller */
+	spi1_pins: spi1_pins {
+		pinctrl-single,pins = <
+			PIN(21) FUN_DRV_20MA 		/* MOSI */
+			PIN(38) FUN_DRV_20MA		/* SCK */
+			PIN(41) FUN_DRV_20MA>		/* CS */
+	}
+	/* SX1262 LoRa Radio */
+	spi2_pins: spi2_pins {
+		pinctrl-single,pins = <
+			PIN(17) FUN_DRV_20MA		/* CS0 */
+			PIN(3) FUN_DRV_20MA			/* MOSI */
+			PIN(8) FUN_DRV_20MA			/* SCK */
+			PIN(9) FUN0_20MA_IE_WPU>;	/* MISO */
+	};
+	/* Debug UART */
+	uart0_pins: uart0_pins {
+		pinctrl-single,pins = <
+			PIN(43) FUN0_20MA			/* U0TXD */
+			PIN(44) FUN0_20MA_IE_WPU>;	/* U0RXD */
+	};
+	usb_pins: usb_pins {
+		pinctrl-single,pins = <
+			PIN(19) MUX_SLP_SEL			/* USB_D- */
+			PIN(20) MUX_SLP_SEL>;		/* USB_D+ */
+	};
+};
+
+&gpio0 {
+	status = "ok";
+};
+
+&uart0 {
+	pinctrl-0 = <&uart0_pins>;
+	pinctrl-names = "default";
+	status = "ok";
+};
+
+/* NV3007 LCD Controller */
+&spi1 {
+	pinctrl-0 = <&spi1_pins>;
+	pinctrl-names = "default";
+	status = "ok";
+
+	nv3007_spi@0 {
+		compatible = "nv3007-spi";
+		reg = <0>;
+	};
+};
+
+/* SX1262 LoRa Radio */
+&spi2 {
+	pinctrl-0 = <&spi2_pins>;
+	pinctrl-names = "default";
+	status = "ok";
+
+	/* FIXME: Replace with SX1262 radio
+	mmc_spi@0 {
+		compatible = "mmc-spi-slot";
+		reg = <0>;
+	};
+	*/
+};
+
+&acm {
+	status = "ok";
+};
+
+&usb_phy {
+	status = "ok";
+};
+
+&usb {
+#if 1
+	dr_mode = "host";
+	pinctrl-0 = <&usb_host_in &usb_rtc_pins>;
+#else
+	dr_mode = "peripheral";
+	pinctrl-0 = <&usb_device_in &usb_rtc_pins>;
+#endif
+	pinctrl-names = "default";
+	status = "ok";
+};
+
+&ipc {
+	wifi@1 {
+		compatible = "esp,esp32-wifi-shmem";
+		reg = <1>;
+	};
+};
+
+&intc {
+	reg = <0x600c2800 0x800>;
+};
