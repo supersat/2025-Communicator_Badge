@@ -1,6 +1,6 @@
 [submodule "firmware/linux/buildroot"]
 	path = firmware/linux/buildroot
-	url = git@github.com:supersat/buildroot.git
+	url = https://github.com/supersat/buildroot.git
 [submodule "firmware/linux/crosstool-NG"]
 	path = firmware/linux/toolchain/crosstool-NG
 	url = https://github.com/jcmvbkbc/crosstool-NG.git
@@ -13,3 +13,6 @@
 [submodule "firmware/linux/toolchain/config-esp32s3"]
 	path = firmware/linux/toolchain/esp32s3
 	url = https://github.com/jcmvbkbc/config-esp32s3
+[submodule "firmware/linux/esp-hosted"]
+	path = firmware/linux/esp-hosted
+	url = https://github.com/supersat/esp-hosted.git
