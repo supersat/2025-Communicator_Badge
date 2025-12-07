@@ -34,8 +34,23 @@ popd
 popd
 ```
 
-Now we can build the kernel and file system image:
+Now we can build the Linux kernel and file system image:
 
 ```
 make
+```
+
+Now, we'll finally need to build the RTOS that drives the
+WiFi hardware and communicates with the Linux kernel over
+a bespooke IPC mechanism:
+
+```
+pushd esp-hosted/esp_hosted_ng/esp/esp_driver
+cmake .
+cd esp-idf
+. export.sh
+cd ../network_adapter
+idf.py set-target esp32s3
+cp sdkconfig.defaults.esp32s3 sdkconfig
+idf.py build
 ```
