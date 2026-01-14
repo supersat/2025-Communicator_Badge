@@ -11,6 +11,7 @@
 		reg = <0x3d800000 0x00800000>;
 	};
 
+	/* SAO port */
 	i2c0 {
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -23,6 +24,7 @@
 		pinctrl-names = "default";
 	};
 
+	/* Keyboard interface */
 	i2c1 {
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -73,26 +75,32 @@
 			PIN(4) FUN0_20MA_IE_WPU			/* SDA */
 			PIN(5) FUN0_20MA_IE_WPU>;		/* SCL */
 	};
-	/* Keyboard */
+	/* Keyboard interface */
 	i2c1_pins: i2c1_pins {
 		pinctrl-single,pins = <
 			PIN(47) FUN0_20MA_IE_WPU		/* SDA */
 			PIN(14) FUN0_20MA_IE_WPU>;		/* SCL */
 	};
 	/* NV3007 LCD controller */
-	spi1_pins: spi1_pins {
+	spi3_pins: spi3_pins {
 		pinctrl-single,pins = <
 			PIN(21) FUN_DRV_20MA 		/* MOSI */
 			PIN(38) FUN_DRV_20MA		/* SCK */
-			PIN(41) FUN_DRV_20MA>		/* CS */
-	}
+			PIN(41) FUN_DRV_20MA		/* CS */
+			PIN(40) FUN0_20MA			/* RESET */
+			PIN(39) FUN0_20MA			/* D/C */
+			PIN(42) FUN0_20MA>;			/* TE */
+	};
 	/* SX1262 LoRa Radio */
 	spi2_pins: spi2_pins {
 		pinctrl-single,pins = <
 			PIN(17) FUN_DRV_20MA		/* CS0 */
 			PIN(3) FUN_DRV_20MA			/* MOSI */
 			PIN(8) FUN_DRV_20MA			/* SCK */
-			PIN(9) FUN0_20MA_IE_WPU>;	/* MISO */
+			PIN(9) FUN0_20MA_IE_WPU		/* MISO */
+			PIN(10) FUN0_20MA			/* SW */
+			PIN(15) FUN0_20MA_IE_WPU	/* BUSY */
+			PIN(16) FUN0_20MA>;			/* DIO */
 	};
 	/* Debug UART */
 	uart0_pins: uart0_pins {
@@ -118,14 +126,18 @@
 };
 
 /* NV3007 LCD Controller */
-&spi1 {
-	pinctrl-0 = <&spi1_pins>;
+&spi3 {
+	pinctrl-0 = <&spi3_pins>;
 	pinctrl-names = "default";
 	status = "ok";
 
-	nv3007_spi@0 {
-		compatible = "nv3007-spi";
+	nv3007@0 {
+		compatible = "nv3007-spi", "hackaday,nv3007";
 		reg = <0>;
+		spi-max-frequency = <80000000>;
+		dc-gpios = <&gpio0 39 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio0 40 GPIO_ACTIVE_LOW>;
+		rotation = <270>;
 	};
 };
 
