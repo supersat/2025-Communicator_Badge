@@ -19,9 +19,6 @@
 
 		sda-gpios = <&gpio0 4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 		scl-gpios = <&gpio0 5 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-
-		pinctrl-0 = <&i2c0_pins>;
-		pinctrl-names = "default";
 	};
 
 	/* Keyboard interface */
@@ -33,8 +30,24 @@
 		sda-gpios = <&gpio0 47 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 		scl-gpios = <&gpio0 14 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 
-		pinctrl-0 = <&i2c1_pins>;
-		pinctrl-names = "default";
+		keypad: tca8418@34 {
+			compatible = "ti,tca8418";
+			reg = <0x34>;
+			interrupt-parent = <&gpio0>;
+			interrupts = <13 IRQ_TYPE_LEVEL_LOW>; /* Interrupt on GPIO pin IO13, falling edge */
+			keypad,num-rows = <8>;
+			keypad,num-columns = <10>;
+			linux,keymap = <
+				0x0001003b 0x0002004a 0x00030049 0x00040048 0x00050047 0x0006003c 0x0007003d 0x0008003e 0x0009003f
+				0x01000001 0x01010010 0x01020011 0x01030012 0x01040013 0x01050014 0x01060015 0x01070016 0x01080017 0x01090018
+				0x0200000f 0x0201001e 0x0202001f 0x02030020 0x02040021 0x02050022 0x02060023 0x02070024 0x02080025 0x02090026
+				0x0300002a 0x0301002c 0x0302002d 0x0303002e 0x0304002f 0x03050030 0x03060031 0x03070032 0x03080033 0x03090024
+				0x0400001d 0x0401e05b 0x04020038 0x0403002b 0x04040039 0x0406006a 0x0407006c 0x04080069 0x04090064
+				0x0502004a 0x0503004d 0x0504004c 0x0505004b 0x0506001b 0x0507001a 0x05080019
+				0x06020037 0x06030051 0x06040050 0x0605004f 0x0606001c 0x06070028 0x06080027
+				0x07020062 0x07030075 0x07040053 0x07050052 0x07060036 0x07070067 0x0708000e
+			>;
+		};
 	};
 };
 
@@ -69,18 +82,6 @@
 &iomux {
 	status = "ok";
 
-	/* SAO port */
-	i2c0_pins: i2c0_pins {
-		pinctrl-single,pins = <
-			PIN(4) FUN0_20MA_IE_WPU			/* SDA */
-			PIN(5) FUN0_20MA_IE_WPU>;		/* SCL */
-	};
-	/* Keyboard interface */
-	i2c1_pins: i2c1_pins {
-		pinctrl-single,pins = <
-			PIN(47) FUN0_20MA_IE_WPU		/* SDA */
-			PIN(14) FUN0_20MA_IE_WPU>;		/* SCL */
-	};
 	/* NV3007 LCD controller */
 	spi3_pins: spi3_pins {
 		pinctrl-single,pins = <
