@@ -121,9 +121,9 @@
 	/* SX1262 LoRa Radio */
 	sx1262_pins: sx1262_pins {
 		pinctrl-single,pins = <
-			PIN(17) FUN0_DRV_20MA		/* CS0 */
-			PIN(3) FUN0_DRV_20MA		/* MOSI */
-			PIN(8) FUN0_DRV_20MA		/* SCK */
+			PIN(17) FUN0_20MA		/* CS0 */
+			PIN(3) FUN0_20MA		/* MOSI */
+			PIN(8) FUN0_20MA		/* SCK */
 			PIN(9) FUN0_20MA_IE_WPU		/* MISO */
 			PIN(10) FUN0_20MA			/* SW */
 			PIN(15) FUN0_20MA_IE_WPU	/* BUSY */
@@ -133,12 +133,12 @@
 	/* NV3007 LCD controller */
 	lcd_pins: lcd_pins {
 		pinctrl-single,pins = <
-			PIN(41) FUN0_DRV_20MA		/* CS0 */
-			PIN(21) FUN0_DRV_20MA		/* MOSI */
-			PIN(38) FUN0_DRV_20MA		/* SCK */
-			PIN(39) FUN0_DRV_20MA		/* D/C */
-			PIN(40) FUN0_DRV_20MA>		/* RESET */
-			PIN(2)  FUN0_20MA_IE_WPD    /* BACKLIGHT: FIXME */
+			PIN(41) FUN0_20MA		/* CS0 */
+			PIN(21) FUN0_20MA		/* MOSI */
+			PIN(38) FUN0_20MA		/* SCK */
+			PIN(39) FUN0_20MA		/* D/C */
+			PIN(40) FUN0_20MA		/* RESET */
+			PIN(2)  (FUN_SEL(0) | FUN_DRV_20MA | FUN_IE | FUN_WPD)    /* BACKLIGHT: FIXME */
 			PIN(42) FUN0_20MA_IE_WPU>;	/* TE (FIXME -- pull-up for now) */
 	};
 
@@ -166,7 +166,7 @@
 
 /* NV3007 LCD Controller */
 &spi3 {
-	pinctrl-0 = <&spi3_pins &spi3_gpio_out>;
+	pinctrl-0 = <&lcd_pins &spi3_gpio_out>;
 	pinctrl-names = "default";
 	status = "ok";
 
@@ -179,24 +179,19 @@
 		rotation = <270>;
 		/* backlight = <&backlight>; */
 		status = "ok";
-
-		pinctrl-0 = <&lcd_pins>;
-		pinctrl-names = "default";
 	};
 };
 
 /* SX1262 LoRa Radio */
 &spi2 {
-	pinctrl-0 = <&spi2_pins>;
+	pinctrl-0 = <&sx1262_pins>;
 	pinctrl-names = "default";
 	status = "ok";
 
-	/* FIXME: Replace with SX1262 radio
-	mmc_spi@0 {
-		compatible = "mmc-spi-slot";
+	sx1262@0 {
+		compatible = "sx1262-spi", "hackaday,sx1262";
 		reg = <0>;
 	};
-	*/
 };
 
 &acm {
