@@ -59,6 +59,8 @@
 	};
 };
 
+/* This specifies the mapping from peripherial signal to GPIO pin (or IO mux or constant) */
+/* In this case, GPIO_FUN_IN_SEL(x) specifies the peripheral signal, and the value is the GPIO pin */
 &gpio_in_mux {
 	status = "ok";
 	usb_device_in: usb_device_in {
@@ -80,10 +82,12 @@
 	/* SX1262 LoRa Radio */
 	spi2_gpio_in: spi2_gpio_in {
 		pinctrl-single,pins = <
-			GPIO_FUNC_OUT_SEL(9) 102>;		/* SPI2 MISO: GPIO9, signal 102 */
+			GPIO_FUNC_OUT_SEL(103) 9>;		/* SPI2 MISO: GPIO9, signal 103 */
 	};
 };
 
+/* This specifies the mapping from peripherial signal to GPIO pin */
+/* In this case, GPIO_FUN_OUT_SEL(x) specifies the GPIO pin, and the value is the peripheral signal */
 &gpio_out_mux {
 	status = "ok";
 
@@ -99,9 +103,9 @@
 	/* NV3007 LCD controller */
 	spi3_gpio_out: spi3_gpio_out {
 		pinctrl-single,pins = <
-			GPIO_FUNC_OUT_SEL(41) 110		/* SPI3 CS0:  GPIO41, signal 71 */
-			GPIO_FUNC_OUT_SEL(21) 103		/* SPI3 MOSI: GPIO21, signal 68 */
-			GPIO_FUNC_OUT_SEL(38) 101>;		/* SPI3 SCK:  GPIO38, signal 66 */
+			GPIO_FUNC_OUT_SEL(41) 71		/* SPI3 CS0:  GPIO41, signal 71 */
+			GPIO_FUNC_OUT_SEL(21) 68		/* SPI3 MOSI: GPIO21, signal 68 */
+			GPIO_FUNC_OUT_SEL(38) 66>;		/* SPI3 SCK:  GPIO38, signal 66 */
 	};
 };
 
@@ -121,9 +125,9 @@
 	/* SX1262 LoRa Radio */
 	sx1262_pins: sx1262_pins {
 		pinctrl-single,pins = <
-			PIN(17) FUN0_20MA		/* CS0 */
-			PIN(3) FUN0_20MA		/* MOSI */
-			PIN(8) FUN0_20MA		/* SCK */
+			PIN(17) FUN0_20MA			/* CS0 */
+			PIN(3) FUN0_20MA			/* MOSI */
+			PIN(8) FUN0_20MA			/* SCK */
 			PIN(9) FUN0_20MA_IE_WPU		/* MISO */
 			PIN(10) FUN0_20MA			/* SW */
 			PIN(15) FUN0_20MA_IE_WPU	/* BUSY */
@@ -133,13 +137,13 @@
 	/* NV3007 LCD controller */
 	lcd_pins: lcd_pins {
 		pinctrl-single,pins = <
-			PIN(41) FUN0_20MA		/* CS0 */
-			PIN(21) FUN0_20MA		/* MOSI */
-			PIN(38) FUN0_20MA		/* SCK */
-			PIN(39) FUN0_20MA		/* D/C */
-			PIN(40) FUN0_20MA		/* RESET */
-			PIN(2)  (FUN_SEL(0) | FUN_DRV_20MA | FUN_IE | FUN_WPD)    /* BACKLIGHT: FIXME */
-			PIN(42) FUN0_20MA_IE_WPU>;	/* TE (FIXME -- pull-up for now) */
+			PIN(41) (FUN_SEL(1) | FUN_DRV_20MA)		/* CS0 */
+			PIN(21) (FUN_SEL(1) | FUN_DRV_20MA)		/* MOSI */
+			PIN(38) (FUN_SEL(1) | FUN_DRV_20MA)		/* SCK */
+			PIN(39) (FUN_SEL(1) | FUN_DRV_20MA)		/* D/C */
+			PIN(40) (FUN_SEL(1) | FUN_DRV_20MA)		/* RESET */
+			PIN(2)  (FUN_SEL(1) | FUN_DRV_20MA)     /* BACKLIGHT: FIXME */
+			PIN(42) (FUN_SEL(1) | FUN_DRV_20MA | FUN_IE | FUN_WPU)>;	/* TE (FIXME -- pull-up for now) */
 	};
 
 	uart0_pins: uart0_pins {
