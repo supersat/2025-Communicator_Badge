@@ -1,0 +1,14 @@
+config DRM_NV3007
+	tristate "DRM support for NV3007 TFT LCD panels"
+	depends on DRM && SPI
+	select DRM_KMS_HELPER
+	select DRM_GEM_DMA_HELPER
+	select DRM_MIPI_DBI
+	help
+	  DRM driver for NV3007 2.79" TFT LCD panels using SPI interface.
+	  This is the display used on the Hackaday Supercon 2025 Badge.
+
+	  The panel has a native resolution of 142x428 and uses a
+	  MIPI DBI Type C (SPI) interface with a D/C GPIO.
+
+	  To compile this driver as a module, choose M here.

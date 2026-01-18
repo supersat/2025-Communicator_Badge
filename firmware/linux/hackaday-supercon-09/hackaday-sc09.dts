@@ -11,6 +11,12 @@
 		reg = <0x3d800000 0x00800000>;
 	};
 
+	backlight: backlight {
+		compatible = "gpio-backlight";
+		gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+		default-on;
+	};
+
 	/* SAO port */
 	i2c0 {
 		#address-cells = <1>;
@@ -139,6 +145,7 @@
 		dc-gpios = <&gpio0 39 GPIO_ACTIVE_HIGH>;
 		reset-gpios = <&gpio0 40 GPIO_ACTIVE_LOW>;
 		rotation = <270>;
+		backlight = <&backlight>;
 	};
 };
 
