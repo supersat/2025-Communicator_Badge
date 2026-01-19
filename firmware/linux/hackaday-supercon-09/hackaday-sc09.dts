@@ -11,6 +11,10 @@
 		reg = <0x3d800000 0x00800000>;
 	};
 
+	chosen {
+		bootargs = "earlycon=esp32s3uart,mmio32,0x60000000,115200n8,40000000 console=tty0 debug rw root=mtd:rootfs no_hash_pointer ";
+	};
+
 	/*
 	backlight: backlight {
 		compatible = "gpio-backlight";
@@ -151,6 +155,7 @@
 			PIN(43) FUN0_20MA			/* U0TXD */
 			PIN(44) FUN0_20MA_IE_WPU>;	/* U0RXD */
 	};
+
 	usb_pins: usb_pins {
 		pinctrl-single,pins = <
 			PIN(19) MUX_SLP_SEL			/* USB_D- */
@@ -174,15 +179,33 @@
 	pinctrl-names = "default";
 	status = "ok";
 
-	nv3007@0 {
-		compatible = "nv3007-spi", "hackaday,nv3007";
+	lcd: display@0 {
+		compatible = "er-tft2.79-1", "panel-mipi-dbi-spi";
 		reg = <0>;
-		spi-max-frequency = <80000000>;
-		dc-gpios = <&gpio0 39 GPIO_ACTIVE_HIGH>;
-		reset-gpios = <&gpio0 40 GPIO_ACTIVE_LOW>;
-		rotation = <270>;
-		/* backlight = <&backlight>; */
+		spi-max-frequency = <10000000>;
+		write-only;
 		status = "ok";
+
+		dc-gpios = <&gpio0 39 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio0 40 GPIO_ACTIVE_HIGH>;
+		/* backlight = <&backlight>; */
+		
+		height-mm = <66>;
+		width-mm = <21>;
+		format = "r5g6b5";
+		rotation = <270>;
+
+		panel-timing {
+			hactive = <428>;
+			vactive = <142>;
+			hback-porch = <0>;
+			vback-porch = <0>;
+			clock-frequency = <0>;
+			hfront-porch = <0>;
+			hsync-len = <0>;
+			vfront-porch = <0>;
+			vsync-len = <0>;
+		};
 	};
 };
 
